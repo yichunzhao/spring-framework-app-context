@@ -14,9 +14,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class Application {
 
     public static void main(String[] args) throws Exception {
-//        GreetingService greetingService = new GreetingService("Hello");
-//        TimeService timeService = new TimeService(true);
-//        OutputService outputService = new OutputService(greetingService,timeService);
 
         //Java config tells IOC container what should be instantiated for usage later on. That is almost the first
         //thing to do as the Spring starts. The application context cook beans for clients.
@@ -26,7 +23,7 @@ public class Application {
         OutputService outputService = context.getBean(OutputService.class);
 
         for (int i = 0; i < 5; i++) {
-            outputService.generateOutput("Somebody");
+            outputService.generateOutput();
             Thread.sleep(5000);
         }
     }
