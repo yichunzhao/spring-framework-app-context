@@ -2,8 +2,11 @@ package com.ynz.appcontext;
 
 import com.ynz.appcontext.config.ApplicationConfig;
 import com.ynz.appcontext.service.OutputService;
+import com.ynz.appcontext.service.ProfileManger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.stream.Stream;
 
 /**
  * A Spring context encapsulates a Bean factory, which is configured by a java config to determine which beans
@@ -21,6 +24,9 @@ public class Application {
         //Beans can be injected from the application context, i.e. its IOC container.
         ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
         OutputService outputService = context.getBean(OutputService.class);
+
+        Stream.of(context.getBean(ProfileManger.class).getCurrentProfile())
+                .forEach(s -> System.out.println("current profile: " + s));
 
         for (int i = 0; i < 5; i++) {
             outputService.generateOutput();
