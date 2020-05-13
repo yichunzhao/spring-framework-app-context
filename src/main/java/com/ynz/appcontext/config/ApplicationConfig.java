@@ -21,10 +21,29 @@ public class ApplicationConfig {
     @Value("${app.name}")
     private String name;
 
+    //using Spring expression language to translate the environment that we are in, the profile that we want, into
+    //a boolean. # means using Spring Expression Language.
+    //the environment includes, the system OS env. var.,  the VM variables or the VM var. and vm arguments,
+    // the application arguments as well as as any configuration that you have loaded.
+    @Value("#{new Boolean(environment['spring.profiles.active']!='dev')}")
+    private boolean is24;
+
     @Bean
     public TimeService timeService() {
-        return new TimeService(true);
+        return new TimeService(is24);
     }
+
+//    @Bean
+//    @Profile("!dev")
+//    public TimeService timeService() {
+//        return new TimeService(true);
+//    }
+//
+//    @Bean
+//    @Profile("dev")
+//    public TimeService timeService12() {
+//        return new TimeService(false);
+//    }
 
     @Bean
     public GreetingService greetingService() {
