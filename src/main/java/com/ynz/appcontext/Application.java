@@ -10,18 +10,14 @@ import java.util.stream.Stream;
 
 /**
  * A Spring context encapsulates a Bean factory, which is configured by a java config to determine which beans
- * need to be created. The application context works as a IOC container, via which the client code may directly
- * DI the bean in its own usage.
+ * need to be created, or it may be determined by a component scan and auto-configuration. The application context
+ * works as an IOC container, from which the client code acquire the bean at the point it needs.
  */
 
 public class Application {
 
     public static void main(String[] args) throws Exception {
 
-        //Java config tells IOC container what should be instantiated for usage later on. That is almost the first
-        //thing to do as the Spring starts. The application context cook beans for clients.
-
-        //Beans can be injected from the application context, i.e. its IOC container.
         ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
         OutputService outputService = context.getBean(OutputService.class);
 
