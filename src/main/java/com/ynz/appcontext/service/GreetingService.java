@@ -1,5 +1,6 @@
 package com.ynz.appcontext.service;
 
+import com.ynz.appcontext.aspect.Countable;
 import com.ynz.appcontext.aspect.Loggable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class GreetingService {
     }
 
     @Loggable
+    @Countable
     public String getGreeting() {
         return greeting + " " + name;
     }
