@@ -1,10 +1,8 @@
 package com.ynz.appcontext.aspect;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -25,6 +23,7 @@ public class LoggingAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 
+    //Matching a jointPoint; that is decorated by the annotation.
     @Pointcut("@annotation(Loggable)")
     public void executeLogging() {
 
@@ -52,7 +51,7 @@ public class LoggingAspect {
         StringBuilder sb = new StringBuilder();
 
         sb.append("After advice: ");
-        sb.append("JoinPoint is completed: ");
+        sb.append("JoinPoint is completed: " + joinPoint.getSignature().toString() + " ");
 
         if (returnValue instanceof Collection) {
             sb.append(((Collection) returnValue).size()).append(" instance(s) ");
@@ -61,6 +60,31 @@ public class LoggingAspect {
         }
 
         LOGGER.info(sb.toString());
+    }
+
+    @Around("executeLogging()")
+    public Object logAroundMethodCall(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        StringBuilder message = new StringBuilder();
+
+        //we make the method wrapped
+        Object returnValue = joinPoint.proceed();
+
+        long later = System.currentTimeMillis();
+
+        message.append(" Around Method : " + joinPoint.getSignature().getName());
+        message.append(" Time cost: +  " + (later - start)).append("ms");
+
+
+        if (returnValue instanceof Collection) {
+            message.append(", returning : ").append(((Collection) returnValue).size()).append(" instance(s) ");
+        } else {
+            message.append(", returning : ").append(returnValue.toString());
+        }
+
+        LOGGER.info(message.toString());
+
+        return returnValue;
     }
 
 
